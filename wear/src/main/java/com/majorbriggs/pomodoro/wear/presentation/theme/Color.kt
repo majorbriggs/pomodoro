@@ -1,4 +1,4 @@
-package com.majorbriggs.pomodoro.presentation.theme
+package com.majorbriggs.pomodoro.wear.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 import androidx.wear.compose.material.Colors

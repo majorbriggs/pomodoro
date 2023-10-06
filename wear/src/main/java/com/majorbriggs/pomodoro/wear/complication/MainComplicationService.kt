@@ -1,4 +1,4 @@
-package com.majorbriggs.pomodoro.complication
+package com.majorbriggs.pomodoro.wear.complication
 
 import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType

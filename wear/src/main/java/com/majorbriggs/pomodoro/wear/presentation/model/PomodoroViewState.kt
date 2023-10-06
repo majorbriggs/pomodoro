@@ -1,4 +1,4 @@
-package com.majorbriggs.pomodoro.presentation.model
+package com.majorbriggs.pomodoro.wear.presentation.model
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

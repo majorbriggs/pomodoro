@@ -1,4 +1,4 @@
-package com.majorbriggs.pomodoro.presentation.theme
+package com.majorbriggs.pomodoro.wear.presentation.theme
 
 import androidx.compose.runtime.Composable
 import androidx.wear.compose.material.MaterialTheme

@@ -1,12 +1,15 @@
-package com.majorbriggs.pomodoro.presentation
+package com.majorbriggs.pomodoro.wear.presentation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.majorbriggs.pomodoro.presentation.model.PomodoroState
-import com.majorbriggs.pomodoro.presentation.model.PomodoroViewState
+import com.majorbriggs.pomodoro.wear.data.dao.SessionDao
+import com.majorbriggs.pomodoro.wear.data.model.SessionDto
+import com.majorbriggs.pomodoro.wear.presentation.model.PomodoroState
+import com.majorbriggs.pomodoro.wear.presentation.model.PomodoroViewState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -21,9 +24,16 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.time.Instant
+import java.util.Date
+import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class PomodoroViewModel : ViewModel() {
+@HiltViewModel
+class PomodoroViewModel @Inject constructor(
+    private val sessionDao: SessionDao,
+) : ViewModel() {
 
     private val seconds: Int = 1
 
@@ -109,9 +119,18 @@ class PomodoroViewModel : ViewModel() {
     fun toggleTimer() {
         when (_pomodoroState.value) {
             PomodoroState.WORK -> _pomodoroState.update { PomodoroState.PAUSED }
-            PomodoroState.BREAK -> _pomodoroState.update { PomodoroState.WORK }
+            PomodoroState.BREAK -> {
+                _pomodoroState.update {
+                    PomodoroState.WORK
+                }
+            }
             PomodoroState.PAUSED -> _pomodoroState.update { PomodoroState.WORK }
-            PomodoroState.RESET -> _pomodoroState.update { PomodoroState.WORK }
+            PomodoroState.RESET -> {
+                viewModelScope.launch {
+                    sessionDao.insert(SessionDto(startDate = Date.from(Instant.now())))
+                }
+                _pomodoroState.update { PomodoroState.WORK }
+            }
         }
     }
 

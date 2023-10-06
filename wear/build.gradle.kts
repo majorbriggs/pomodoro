@@ -1,22 +1,32 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
+    kotlin("kapt")
 }
 
 android {
-    namespace = "com.majorbriggs.pomodoro"
+    namespace = "com.majorbriggs.pomodoro.wear"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.majorbriggs.pomodoro"
+        applicationId = "com.majorbriggs.pomodoro.wear"
         minSdk = 30
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
         vectorDrawables {
             useSupportLibrary = true
         }
-
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf(
+                    "room.schemaLocation" to "$projectDir/schemas",
+                    "room.incremental" to "true"
+                )
+            }
+        }
     }
 
     buildTypes {
@@ -26,11 +36,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -46,6 +56,17 @@ android {
 }
 
 dependencies {
+    val roomVersion = "2.5.2"
+
+    implementation("androidx.room:room-runtime:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+
+    ksp("androidx.room:room-compiler:$roomVersion")
+    implementation("com.google.dagger:hilt-android:2.45")
+    kapt("com.google.dagger:hilt-android-compiler:2.45")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.wear:wear-ongoing:1.0.0")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("com.google.android.gms:play-services-wearable:18.1.0")
@@ -63,7 +84,8 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.wear.tiles:tiles:1.2.0")
     implementation("androidx.wear.tiles:tiles-material:1.2.0")
-    implementation("com.google.android.horologist:horologist-compose-tools:0.1.5")
+
+    implementation("com.google.android.horologist:horologist-compose-tools:0.1.8")
     implementation("com.google.android.horologist:horologist-tiles:0.4.10")
     implementation("androidx.wear.watchface:watchface-complications-data-source-ktx:1.1.1")
     implementation("androidx.compose.material:material-icons-core")

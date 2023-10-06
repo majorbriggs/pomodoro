@@ -1,4 +1,4 @@
-package com.majorbriggs.pomodoro.presentation.ui
+package com.majorbriggs.pomodoro.wear.presentation.ui
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
